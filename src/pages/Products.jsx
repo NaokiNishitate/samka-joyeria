@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ProductGrid from '../components/ProductGrid';
+import CollectionsGrid from '../components/CollectionsGrid';
 import SectionTitle from '../components/SectionTitle';
-import { products } from '../data/sampleData';
+import { products, collections } from '../data/sampleData';
 import '../assets/css/styles.css';
 
 export default function Products() {
@@ -13,12 +14,14 @@ export default function Products() {
 
     useEffect(() => {
         const hash = location.hash.replace('#', '');
-        if (hash === 'anillos' && ringsRef.current) {
-            ringsRef.current.scrollIntoView({ behavior: 'smooth' });
-        } else if (hash === 'aretes' && earringsRef.current) {
-            earringsRef.current.scrollIntoView({ behavior: 'smooth' });
-        } else if (hash === 'collares' && necklacesRef.current) {
-            necklacesRef.current.scrollIntoView({ behavior: 'smooth' });
+        const scrollToRef = {
+            'anillos': ringsRef,
+            'aretes': earringsRef,
+            'collares': necklacesRef
+        }[hash];
+
+        if (scrollToRef?.current) {
+            scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [location]);
 
@@ -30,6 +33,13 @@ export default function Products() {
                     subtitle="Explora nuestra colección completa"
                 />
 
+                {/* Sección de Colecciones */}
+                <section className="section-padding">
+                    <h2 className="section-subtitle">Nuestras Colecciones</h2>
+                    <CollectionsGrid collections={collections} variant="compact" />
+                </section>
+
+                {/* Secciones de productos por categoría */}
                 <section ref={ringsRef} className="product-category">
                     <h2 className="category-title">Anillos</h2>
                     <ProductGrid products={products.filter(p => p.category === 'anillos')} />

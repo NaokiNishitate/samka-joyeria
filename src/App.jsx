@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
+import Collections from './pages/Collections';
 import ProductDetail from './pages/ProductDetail';
 import CartSidebar from './components/Cart/CartSidebar';
 import './assets/css/styles.css';
@@ -13,12 +14,13 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Header onCartClick={() => setCartOpen(true)} />
+      <Header />
 
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/collections" element={<Collections />} />
           <Route path="/products/:id" element={<ProductDetail />} />
         </Routes>
       </main>

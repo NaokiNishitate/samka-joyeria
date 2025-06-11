@@ -1,0 +1,105 @@
+.collections-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.collections-grid.default {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.collections-grid.compact {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.collection-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.collection-card:hover {
+  transform: translateY(-5px);
+}
+
+.collection-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.collection-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* Aspect ratio 1:1 */
+  overflow: hidden;
+}
+
+.collection-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.collection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+.collection-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem;
+  color: white;
+  z-index: 2;
+}
+
+.collection-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.collection-description {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.collection-cta {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid var(--gold-300);
+}
+
+/* Estilos específicos para la versión compacta */
+.collections-grid.compact .collection-info {
+  padding: 1rem;
+}
+
+.collections-grid.compact .collection-name {
+  font-size: 1.2rem;
+}
+
+.collections-grid.compact .collection-description {
+  display: none;
+}
+
+.collections-grid.compact .collection-cta {
+  font-size: 0.7rem;
+}

@@ -1,5 +1,4 @@
 import React from 'react';
-import Hero from '../components/Hero';
 import ProductGrid from '../components/ProductGrid';
 import SectionTitle from '../components/SectionTitle';
 import { products } from '../data/sampleData';
@@ -10,9 +9,7 @@ export default function Home() {
 
     return (
         <div className="home-page">
-            <Hero />
-
-            <section id="featured" className="featured-products">
+            <section id="featured" className="section-padding">
                 <div className="container">
                     <SectionTitle
                         title="Productos Destacados"

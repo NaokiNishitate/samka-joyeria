@@ -1,83 +1,84 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 
 export function useCart() {
-    const [cartItems, setCartItems] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const savedCart = localStorage.getItem('samka-cart');
-            return savedCart ? JSON.parse(savedCart) : [];
-        }
-        return [];
-    });
+    const [cartItems, setCartItems] = useState([]);
 
-    // Persistencia en localStorage
+    // Cargar carrito desde localStorage
+    useEffect(() => {
+        const savedCart = localStorage.getItem('samka-cart');
+        if (savedCart) {
+            try {
+                setCartItems(JSON.parse(savedCart));
+            } catch (error) {
+                console.error('Error parsing cart data:', error);
+                localStorage.removeItem('samka-cart');
+            }
+        }
+    }, []);
+
+    // Guardar en localStorage cuando cambie
     useEffect(() => {
         localStorage.setItem('samka-cart', JSON.stringify(cartItems));
     }, [cartItems]);
 
-    // Añadir al carrito con validación de stock
-    const addToCart = (product, quantity = 1) => {
-        setCartItems(prevItems => {
-            const existingItem = prevItems.find(item => item.id === product.id);
+    const addToCart = useCallback((product, quantity = 1) => {
+        setCartItems(prev => {
+            const existingItem = prev.find(item => item.id === product.id);
 
             if (existingItem) {
-                // Validar stock máximo (ejemplo: 10 unidades)
+                // Validar stock máximo
                 const newQuantity = existingItem.quantity + quantity;
                 if (newQuantity > 10) {
-                    alert('No puedes agregar más de 10 unidades del mismo producto');
-                    return prevItems;
+                    alert('Límite de 10 unidades por producto');
+                    return prev;
                 }
 
-                return prevItems.map(item =>
+                return prev.map(item =>
                     item.id === product.id
                         ? { ...item, quantity: newQuantity }
                         : item
                 );
             }
 
-            return [...prevItems, { ...product, quantity }];
+            return [...prev, { ...product, quantity }];
         });
-    };
+    }, []);
 
-    // Eliminar producto del carrito
-    const removeFromCart = (productId) => {
-        setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
-    };
+    const removeFromCart = useCallback((productId) => {
+        setCartItems(prev => prev.filter(item => item.id !== productId));
+    }, []);
 
-    // Actualizar cantidad con validaciones
-    const updateQuantity = (productId, quantity) => {
-        if (quantity <= 0) {
+    const updateQuantity = useCallback((productId, quantity) => {
+        if (quantity < 1) {
             removeFromCart(productId);
             return;
         }
 
         if (quantity > 10) {
-            alert('No puedes agregar más de 10 unidades del mismo producto');
+            alert('Límite de 10 unidades por producto');
             return;
         }
 
-        setCartItems(prevItems =>
-            prevItems.map(item =>
+        setCartItems(prev =>
+            prev.map(item =>
                 item.id === productId ? { ...item, quantity } : item
             )
         );
-    };
+    }, [removeFromCart]);
 
-    // Calcular total monetario
+    const clearCart = useCallback(() => {
+        setCartItems([]);
+    }, []);
+
     const cartTotal = cartItems.reduce(
         (total, item) => total + (item.price * item.quantity),
         0
     );
 
-    // Contar cantidad total de items
     const cartCount = cartItems.reduce(
         (total, item) => total + item.quantity,
         0
     );
-
-    // Vaciar carrito completamente
-    const clearCart = () => {
-        setCartItems([]);
-    };
 
     return {
         cartItems,
